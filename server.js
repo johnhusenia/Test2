@@ -8,6 +8,8 @@
 *
 * Name: John Clarence C. Husenia Student ID: 174280230 Date: November 1, 2024
 *
+* Published URL: https://web100test1.vercel.app/
+*
 ********************************************************************************/
 const express = require("express");
 const app = express();

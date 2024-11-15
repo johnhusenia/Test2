@@ -43,12 +43,23 @@ body, html {
 
 /* section styles */
 section {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #f7d0a9;
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px; */
+}
+.container1 {
   max-width: 800px;
   margin: 40px auto;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.9);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 h2 {
@@ -205,3 +216,16 @@ label {
 
 }
 
+p {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.container2 {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;     /* Center vertically if needed */
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
