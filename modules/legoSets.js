@@ -1,81 +1,86 @@
 
 class LegoData{
     sets;
+    themes;
+
     constructor(){
         this.sets = [];
-        // this.newsets = [];
+        this.themes = []; 
     }
-    initialize(){
-        return new Promise((resolve,reject)=>{
-        const setData = require("../data/setData");
-        const themeData = require("../data/themeData");
+    initialize() {
+        return new Promise((resolve, reject) => {
+            // Re-read the JSON data from the file
+            fs.readFile('data/setData.json', 'utf8', (err, data) => {
+                if (err) {
+                    reject("Failed to read set data.");
+                    return;
+                }
+    
+                const setData = data ? JSON.parse(data) : [];
+                const themeData = require("../data/themeData");
+    
+                this.themes = [...themeData];
+                this.sets = []; 
+    
 
-        for (let i=0; i<setData.length; i++){
-
-            let setTobeAdded = setData[i]
-            for (let j=0; j<themeData.length; j++){
-            if (setData[i].theme_id == themeData[j].id){
-                setTobeAdded.theme = themeData[j].name
-            }
-        }
-            this.sets.push(setTobeAdded)
-        }
-        if(this.sets != 0){
-            resolve("The sets array is filled with objects.")
-        }else{
-            reject("no data")
-        }
-        
-    });
-    }
-
-    getAllSets(){
-        return new Promise((resolve,reject)=>{
-            let setTobeAdded = [];
-            if(this.sets != 0){
-                resolve(this.sets);
-            }else{
-                reject('No data sets');
-
-            }
-
+                for (let i = 0; i < setData.length; i++) {
+                    let setTobeAdded = setData[i];
+                    let matchingTheme = themeData.find(theme => theme.id === setTobeAdded.theme_id);
+    
+                    if (matchingTheme) {
+                        setTobeAdded.theme = matchingTheme.name;
+                    } else {
+                        setTobeAdded.theme = 'Unknown';
+                    }
+    
+                    this.sets.push(setTobeAdded);
+                }
+    
+                if (this.sets.length > 0) {
+                    resolve("The sets array is filled with objects.");
+                } else {
+                    reject("No data found in setData.");
+                }
+            });
         });
-        
     }
 
-    getSetByNum(setNum){
-        return new Promise((resolve,reject)=>{
-        let num1=0;
-        for (let i=0; i<this.sets.length; i++){
-        if(this.sets[i].set_num==setNum){
-            num1=this.sets[i];
-        }
-        }
-        if(num1!=0){
-            resolve(num1)
-        }else{
-            reject("Unable to find requested set.")
-        }
-
-    });
+    getAllSets() {
+        return new Promise((resolve, reject) => {
+            if (this.sets.length > 0) {
+                resolve(this.sets);
+            } else {
+                reject("No data sets");
+            }
+        });
     }
+
+    getSetByNum(setNum) {
+        return new Promise((resolve, reject) => {
+            const set = this.sets.find(s => s.set_num === setNum);
+            if (set) {
+                resolve(set);
+            } else {
+                reject("Unable to find requested set.");
+            }
+        });
+    }
+
     getSetsByTheme(theme) {
         return new Promise((resolve, reject) => {
-            // if no theme is provided, return all sets
             if (!theme) {
                 return resolve(this.sets);
             }
-    
-            // filter sets by theme (case-insensitive match)
+
             const lowerCaseTheme = theme.toLowerCase();
-            const matchingSets = this.sets.filter(set => 
+            const matchingSets = this.sets.filter(set =>
                 set.theme && set.theme.toLowerCase().includes(lowerCaseTheme)
             );
-    
+
             if (matchingSets.length > 0) {
                 resolve(matchingSets);
             } else {
-                reject('Unable to find requested sets');
+                reject("Unable to find requested sets 123");
             }
         });
     }
