@@ -98,7 +98,7 @@ app.post('/lego/addsets', async (req, res) => {
         req.body.theme = foundTheme
         const newObject = req.body;
         const addset = await legoData.legoaddset(newObject);
-        res.render("set", {set: addset}); 
+        res.redirect("/lego/sets");  
     } catch (error) {
         console.error("Failed to initialize LegoData:", err);
         res.status(422).send("Failed to initialize data after adding set.");
