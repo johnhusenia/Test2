@@ -15,19 +15,21 @@ const express = require("express");
 const app = express();
 const HTTP_PORT = 8080; 
 
-app.set('views', __dirname + '/views');
+const path = require('path');
+const fs = require('fs');
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
+app.set('views', path.join(__dirname, 'views'));
 
 const LegoData = require("./modules/legoSets");
 const legoData = new LegoData();
-const path = require('path');
-const fs = require('fs');
+
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'home.html'));
+app.get("/", (req,res)=>{
+    res.render("home");
+
 });
 
 app.get('/about', (req, res) => {
