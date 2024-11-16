@@ -138,7 +138,7 @@ app.get("/faddSet",  async (req,res)=>{
     
     try {
         const themeSets = await legoData.getAllThemes();
-        res.render("faddSet", {themes: themeSets});
+        res.render("faddset", {themes: themeSets});
 
     } catch (error) {
         console.error(error);
