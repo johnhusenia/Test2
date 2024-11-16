@@ -59,7 +59,7 @@ app.get("/lego/addSet",  async (req,res)=>{
 
     try {
         const themeSets = await legoData.getAllThemes();
-        res.render("addSets", {themes: themeSets});
+        res.render("addsets", {themes: themeSets});
 
     } catch (error) {
         console.error(error);
