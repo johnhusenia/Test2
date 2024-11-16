@@ -43,9 +43,13 @@ app.get("/about", (req,res)=>{
 });
 
 app.get("/test", async (req,res)=>{
-
-        res.render("test1");
-
+    try {
+        const themeSets = await legoData.getAllThemes();
+        res.render("test1", {themes: themeSets});
+    } catch (error) {
+        console.error(error);
+        res.render("404");
+    }
 
 });
 
