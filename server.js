@@ -45,7 +45,7 @@ app.get("/about", (req,res)=>{
 app.get("/test", async (req,res)=>{
     try {
         const themeSets = await legoData.getAllThemes();
-        res.render("test1", {themes: themeSets});
+        res.render("addsets", {themes: themeSets});
     } catch (error) {
         console.error(error);
         res.render("404");
