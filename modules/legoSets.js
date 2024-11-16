@@ -98,7 +98,7 @@ class LegoData{
         console.log('addfunction is running');
         return new Promise((resolve, reject) => {
             if (newObject==0) {
-                reject('Error writing to file: ' + writeErr);
+                reject('Error writing to file: ');
               } else {
                 this.sets.push(newObject);
                 resolve(newObject);
