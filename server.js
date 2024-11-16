@@ -23,6 +23,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 const LegoData = require("./modules/legoSets");
 const legoData = new LegoData();
+app.use(express.urlencoded({ extended: true }));
 
 
 app.use(express.json());
@@ -98,7 +99,7 @@ app.post('/lego/addsets', async (req, res) => {
         req.body.theme = foundTheme
         const newObject = req.body;
         const addset = await legoData.legoaddset(newObject);
-        res.redirect("/lego/sets");  
+        res.render("set", {set: addset});  
     } catch (error) {
         console.error("Failed to initialize LegoData:", err);
         res.status(422).send("Failed to initialize data after adding set.");
