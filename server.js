@@ -44,7 +44,7 @@ app.get("/about", (req,res)=>{
 
 app.get("/test", async (req,res)=>{
 
-        res.render("addSets");
+        res.render("test1");
 
 
 });
