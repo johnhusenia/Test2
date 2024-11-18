@@ -120,6 +120,15 @@ app.get('/lego/deleteset/:set_num', async (req, res) => {
         }
 });
 
+app.get('/lego/redirectToSets', async (req, res) => {
+    try{ 
+        res.redirect("/lego/sets"); 
+        }catch(err){ 
+        res.status(404).send(err); 
+        }
+});
+
+
 // next lines will be dealing with files
 
 app.get("/fsets", async (req,res)=>{
