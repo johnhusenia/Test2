@@ -104,12 +104,14 @@ class LegoData{
 
     getSetByNum(setNum) {
         return new Promise((resolve, reject) => {
-            
+            console.log(setNum);
             this.Set.findAll({
                 where: { set_num: setNum }, 
                 include: [this.Theme] 
+                
             })
             .then(sets => {
+                
                 if (sets.length > 0) {
                     resolve(sets[0]); 
                 } else {

@@ -14,7 +14,7 @@
     <section class="bg-light text-center py-5">
         <div class="container">
             <h1 class="display-5 fw-bold">Collection</h1>
-            <p class="lead text-muted">Browse the entire collection.  Click the theme to filter by themes such as:<br /><a href="/lego/sets?theme=Technic" class="btn btn-primary btn-sm">Technic</a> <a href="/lego/sets?theme=Classic Town" class="btn btn-primary btn-sm">Classic Town</a>  <a href="/lego/sets?theme=Supplemental" class="btn btn-primary btn-sm">Supplemental</a> <a href="/lego/sets?theme=" class="btn btn-primary btn-sm">Reset Filter</a> </p>
+            <p class="lead text-muted">Browse the entire collection.  Click the theme to filter by themes such as:<br /><a href="/sets?theme=Technic" class="btn btn-primary btn-sm">Technic</a> <a href="/sets?theme=Classic Town" class="btn btn-primary btn-sm">Classic Town</a>  <a href="/sets?theme=Supplemental" class="btn btn-primary btn-sm">Supplemental</a> <a href="/sets?theme=" class="btn btn-primary btn-sm">Reset Filter</a> </p>
             
         </div>
     </section>
@@ -29,11 +29,11 @@
                 </div>
               </td>
               <td>
-                <%= set.name%> | <a href="/lego/sets?theme=<%= set.Theme.name %>" class="btn btn-primary btn-sm"><%= set.Theme.name %></a>
+                <%= set.name%> | <a href="/sets?theme=<%= set.Theme.name %>" class="btn btn-primary btn-sm"><%= set.Theme.name %></a>
               </td>
               <td><span class="fw-bold">Year: </span> <%= set.year%> - <span class="fw-bold">Parts:</span> <%= set.numparts%></td>
               <td>
-                <a href="/lego/sets/<%= set.set_num %>" class="btn btn-secondary btn-sm">Details</a>
+                <a href="/sets/<%= set.set_num %>" class="btn btn-secondary btn-sm">Details</a>
               </td>
             </tr>
             <% }) %>
