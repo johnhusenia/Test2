@@ -1,123 +1,207 @@
+require('dotenv').config();
+require('pg');
+const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
 
 class LegoData{
-    sets;
-    themes;
-    constructor(){
-        this.sets = [];
-        this.themes = []; 
-    }
-    initialize(){
-        return new Promise((resolve,reject)=>{
-        const setData = require("../data/setData");
-        const themeData = require("../data/themeData");
-        this.themes = [...themeData];
-        
-        for (let i=0; i<setData.length; i++){
+    sequelize;
+    Set;
+    Theme;
 
-            let setTobeAdded = setData[i]
-            for (let j=0; j<themeData.length; j++){
-            if (setData[i].theme_id == themeData[j].id){
-                setTobeAdded.theme = themeData[j].name
+    constructor(){
+        this.sequelize = new Sequelize(
+            process.env.PGDATABASE,  
+            process.env.PGUSER,      
+            process.env.PGPASSWORD,  
+            {
+              host: process.env.PGHOST, 
+              dialect: 'postgres',      
+              port: process.env.PGPORT, 
+              dialectOptions: {
+                ssl: { rejectUnauthorized: false }, 
+              },
             }
-        }
-            this.sets.push(setTobeAdded)
-        }
-        if (this.sets.length > 0) {
-            resolve("The sets array is filled with objects.");
-        } else {
-            reject("No data found in setData.");
-        }
+          );
+
+          this.Theme = this.sequelize.define('Theme', {
+            id: {
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            name: {
+                type: Sequelize.STRING,
+                allowNull: false,
+            },
+        }, {
+            timestamps: false, // Disable createdAt and updatedAt
+        });
         
-    });
+        this.Set = this.sequelize.define('Set', {
+            set_num: {
+                type: Sequelize.STRING,
+                primaryKey: true,
+            },
+            name: {
+                type: Sequelize.STRING,
+                allowNull: false,
+            },
+            year: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+            },
+            num_parts: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+            },
+            theme_id: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+            },
+            img_url: {
+                type: Sequelize.STRING,
+                allowNull: true,
+            },
+        }, {
+            timestamps: false, // Disable createdAt and updatedAt
+        });
+
+        this.Set.belongsTo(this.Theme, {foreignKey: 'theme_id'}); 
+        
+
+    }
+    
+    initialize(){
+        return this.sequelize
+        .authenticate() 
+        .then(() => {
+            console.log('Connection has been established successfully.');
+        })
+        .catch((err) => {
+            console.error('Unable to connect to the database:', err);
+        });
+        
     }
 
     getAllSets() {
         return new Promise((resolve, reject) => {
-            if (this.sets.length > 0) {
-                resolve(this.sets);
-            } else {
-                reject("No data sets");
-            }
+            this.Set.findAll({
+                include: [this.Theme] 
+            })
+            .then(sets => {
+                if (sets.length > 0) {
+                    resolve(sets); 
+                } else {
+                    reject("No data sets found");
+                }
+            })
+            .catch(error => {
+                reject(`Error retrieving sets: ${error.message}`);
+            });
         });
     }
+
 
     getSetByNum(setNum) {
         return new Promise((resolve, reject) => {
-            const set = this.sets.find(s => s.set_num === setNum);
-            if (set) {
-                resolve(set);
-            } else {
-                reject("Unable to find requested set.");
-            }
+            
+            this.Set.findAll({
+                where: { set_num: setNum }, 
+                include: [this.Theme] 
+            })
+            .then(sets => {
+                if (sets.length > 0) {
+                    resolve(sets[0]); 
+                } else {
+                    reject("Unable to find requested set.");
+                }
+            })
+            .catch(error => {
+                reject(`Error retrieving set: ${error.message}`);
+            });
         });
     }
 
+
+
     getSetsByTheme(theme) {
         return new Promise((resolve, reject) => {
-            if (!theme) {
-                return resolve(this.sets);
-            }
 
-            const lowerCaseTheme = theme.toLowerCase();
-            const matchingSets = this.sets.filter(set =>
-                set.theme && set.theme.toLowerCase().includes(lowerCaseTheme)
-            );
+            this.Set.findAll({
+                include: [this.Theme] 
+            })
+            .then(sets => {
+                if (!theme) {
+                    resolve(sets); 
+                }})
 
-            if (matchingSets.length > 0) {
-                resolve(matchingSets);
-            } else {
-                reject("Unable to find requested sets 123");
-            }
+                this.Set.findAll({
+                    include: [this.Theme], // Include Theme data
+                    where: {
+                        '$Theme.name$': {
+                            [Op.iLike]: `%${theme}%` // Case-insensitive match for Theme.name
+                        }
+                    }
+                })
+                .then(sets => {
+                    if (sets.length > 0) {
+                        resolve(sets); // Resolve with the matching sets
+                    } else {
+                        reject("Unable to find requested sets."); // Reject if no sets are found
+                    }
+                })
+                .catch(error => {
+                    reject(`Error retrieving sets: ${error.message}`); // Reject on error
+                });
         });
     }
 
     getAllThemes() {  // Method to get all themes
         return new Promise((resolve, reject) => {
-            if (this.themes.length > 0) {
-                resolve(this.themes);
-            } else {
-                reject("No themes available");
-            }
-        });
-    }
-
-    getThemeById(id) {
-        return new Promise((resolve, reject) => {
-            const themesWithId = this.themes.filter(t => t.id == id);
-    
-            if (themesWithId.length > 0) {
-                resolve(themesWithId[0].name);
-            } else {
-                reject("Unable to find requested theme(s)");
-            }
+            this.Theme.findAll({
+            })
+            .then(themes => {
+                if (themes.length > 0) {
+                    resolve(themes); 
+                } else {
+                    reject("No data sets found");
+                }
+            })
+            .catch(error => {
+                reject(`Error retrieving themes: ${error.message}`);
+            });
         });
     }
 
 
-    legoaddset(newObject) {
+    legoaddset(newSet) {
         console.log('addfunction is running');
         return new Promise((resolve, reject) => {
-            if (newObject==0) {
-                reject('Error writing to file: ');
-              } else {
-                this.sets.push(newObject);
-                resolve(newObject);
-              }
-
+ 
+            this.Set.create(newSet)
+                .then(() => {
+                    
+                    resolve(newSet); 
+                })
+                .catch(err => {
+                    reject(err.errors[0].message);
+                });
         });
     }
 
-    legodeleteset(newObject) {
+    deleteSetByNum(setNum) {
         console.log('deletefunction is running');
         return new Promise((resolve, reject) => {
-            if (newObject==0) {
-                reject('Error writing to file: ');
-              } else {
-                const filteredData = this.sets.filter(item => item.set_num != newObject);
-                this.sets = filteredData;
+ 
+            this.Set.destroy({
+                where: { set_num: setNum }, // only remove user with id == 3
+              }).then(() => {
                 resolve('Data deleted successfully');
-              }
-
+                console.log('successfully removed a set');
+              })
+              .catch(err => {
+                reject(err.errors[0].message);
+            });
         });
     }
     

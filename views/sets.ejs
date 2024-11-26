@@ -11,14 +11,10 @@
 <%- include("partials/navbar", {page: "/sets"}) %>
 
 	<br />
-  <p>
-    This page will alter sets in the array.
-</p>
-
     <section class="bg-light text-center py-5">
         <div class="container">
             <h1 class="display-5 fw-bold">Collection</h1>
-            <p class="lead text-muted">Browse the entire collection.  Click the theme to filter by themes such as:<br /><a href="/lego/sets?theme=Technic" class="btn btn-primary btn-sm">Technic</a> <a href="/lego/sets?theme=Classic Town" class="btn btn-primary btn-sm">Classic Town</a>  <a href="/lego/sets?theme=Supplemental" class="btn btn-primary btn-sm">Supplemental</a> <a href="/lego/sets" class="btn btn-primary btn-sm">Reset Filter</a> </p>
+            <p class="lead text-muted">Browse the entire collection.  Click the theme to filter by themes such as:<br /><a href="/lego/sets?theme=Technic" class="btn btn-primary btn-sm">Technic</a> <a href="/lego/sets?theme=Classic Town" class="btn btn-primary btn-sm">Classic Town</a>  <a href="/lego/sets?theme=Supplemental" class="btn btn-primary btn-sm">Supplemental</a> <a href="/lego/sets?theme=" class="btn btn-primary btn-sm">Reset Filter</a> </p>
             
         </div>
     </section>
@@ -33,7 +29,7 @@
                 </div>
               </td>
               <td>
-                <%= set.name%> | <a href="/lego/sets?theme=<%= set.theme %>" class="btn btn-primary btn-sm"><%= set.theme %></a>
+                <%= set.name%> | <a href="/lego/sets?theme=<%= set.Theme.name %>" class="btn btn-primary btn-sm"><%= set.Theme.name %></a>
               </td>
               <td><span class="fw-bold">Year: </span> <%= set.year%> - <span class="fw-bold">Parts:</span> <%= set.numparts%></td>
               <td>

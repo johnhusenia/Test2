@@ -3,16 +3,32 @@
     <head>
         <title>Practice</title>
         <link rel="stylesheet" href="css\test1.css" />
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                fetch("https://dummyjson.com/quotes/random")
+                    .then(response => response.json())  
+                    .then(data => {
+                        document.getElementById("quote").innerHTML = `
+                            <p>"${data.quote}" - ${data.author}</p>
+                        `;
+                    })
+                    .catch(error => {
+                        console.error("Error fetching quote:", error);
+                        document.getElementById("quote").innerHTML = "Sorry, there was an error fetching the quote.";
+                    });
+            });
+        </script>
+
     </head>
     <body>
         <%- include("partials/navbar", {page: "/"}) %>
 
         <br />
-        <p>
-            This page will alter sets in the array.
-        </p>
+
             
             <div class="container">
+
                 <div class="row">
                     <main class="col-md-12">
         
@@ -34,8 +50,9 @@
                               <p>
                                 <span class="fw-bold">Set Name: </span> <%= set.name%> <br />
                                 <span class="fw-bold">Year Released: </span> <%= set.year%> <br />
-                                <span class="fw-bold">Theme: </span> <%= set.theme%> <br />
+                                <span class="fw-bold">Theme: </span> <%= set.Theme.name%> <br />
                                 <span class="fw-bold">Number of Parts: </span> <%= set.num_parts%> <br /><br />
+                                <span id="quote"></span>  <br /><br />
                                 <a class="btn btn-danger btn-sm mb-2" href="/lego/deleteset/<%= set.set_num%>">
                                     DELETE SET: <%= set.set_num%>
                                   </a><br />

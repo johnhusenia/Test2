@@ -69,7 +69,7 @@ app.get("/lego/addSet",  async (req,res)=>{
     }
 });
 
-app.get("/lego/sets", async (req,res)=>{
+app.get("/sets", async (req,res)=>{
     const theme = req.query.theme;
     try {
         const themeSets = await legoData.getSetsByTheme(theme)
@@ -95,14 +95,13 @@ app.get('/lego/sets/:set_num', async (req, res) => {
 app.post('/lego/addsets', async (req, res) => {
     console.log("running add");
     try {
-        let foundTheme = await legoData.getThemeById(req.body.theme_id);
-        req.body.theme = foundTheme
         const newObject = req.body;
         const addset = await legoData.legoaddset(newObject);
-        res.render("set", {set: addset});  
-    } catch (error) {
-        console.error("Failed to initialize LegoData:", err);
-        res.status(422).send("Failed to initialize data after adding set.");
+        console.log(addset);
+        const setNum1 = await legoData.getSetByNum(addset.set_num);
+        res.render("set", {set: setNum1});  
+    } catch (err) {
+        res.status(500).render("500", {message: err}); 
     }
 
 
@@ -111,12 +110,10 @@ app.post('/lego/addsets', async (req, res) => {
 app.get('/lego/deleteset/:set_num', async (req, res) => {
     const theme = req.query.theme;
     try{ 
-        await legoData.legodeleteset(req.params.set_num); 
-        // const themeSets = await legoData.getSetsByTheme(theme)
-        // res.render("sets", {sets: themeSets}); 
-        res.redirect("/lego/sets"); 
+        await legoData.deleteSetByNum(req.params.set_num); 
+        res.redirect("/sets");
         }catch(err){ 
-        res.status(404).send(err); 
+            res.status(500).render("500", {message: err}); 
         }
 });
 
@@ -129,72 +126,6 @@ app.get('/lego/redirectToSets', async (req, res) => {
 });
 
 
-// next lines will be dealing with files
-
-app.get("/fsets", async (req,res)=>{
-    const theme = req.query.theme;
-    try {
-        const themeSets = await legoData.getSetsByTheme(theme)
-        res.render("fsets", {sets: themeSets}); 
-    } catch (error) {
-        console.error(error);
-        res.render("404");
-    }
-    
-});
-
-app.get("/faddSet",  async (req,res)=>{
-
-    
-    try {
-        const themeSets = await legoData.getAllThemes();
-        res.render("faddset", {themes: themeSets});
-
-    } catch (error) {
-        console.error(error);
-        res.render("404");
-    }
-});
-
-app.get('/fset/:set_num', async (req, res) => {
-    const setNum = req.params.set_num;
-    try {
-        const setNum1 = await legoData.getSetByNum(setNum);
-        res.render("fset", {set: setNum1}); 
-    } catch (error) {
-        console.error(error);
-        res.render("404");
-    }
-});
-
-app.post('/addsets', async (req, res) => {
-    console.log("running add");
-    try {
-        let foundTheme = await legoData.getThemeById(req.body.theme_id);
-        req.body.theme = foundTheme
-        const newObject = req.body;
-        const addset = await legoData.addsets(newObject);
-        res.render("fset", {set: addset}); 
-    } catch (error) {
-        console.error("Failed to initialize LegoData:", err);
-        res.status(422).send("Failed to initialize data after adding set.");
-    }
-
-
-});
-app.get('/deleteset/:set_num', async (req, res) => {
-    const theme = req.query.theme;
-    try{ 
-        await legoData.deleteSet(req.params.set_num); 
-        // const themeSets = await legoData.getSetsByTheme(theme)
-        // res.render("sets", {sets: themeSets}); 
-        res.redirect("/fsets"); 
-        }catch(err){ 
-        res.status(404).send(err); 
-        }
-});
-
-// this is the end file alteration
 
 // 404 handler for any undefined routes
 app.use((req, res) => {
