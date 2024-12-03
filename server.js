@@ -69,7 +69,7 @@ app.get("/lego/addSet",  async (req,res)=>{
     }
 });
 
-app.get("/sets", async (req,res)=>{
+app.get("/lego/sets", async (req,res)=>{
     const theme = req.query.theme;
     try {
         const themeSets = await legoData.getSetsByTheme(theme)
@@ -81,7 +81,7 @@ app.get("/sets", async (req,res)=>{
     
 });
 
-app.get('/lego/sets/:set_num', async (req, res) => {
+app.get('/lego/set/:set_num', async (req, res) => {
     const setNum = req.params.set_num;
     try {
         const setNum1 = await legoData.getSetByNum(setNum);
@@ -111,7 +111,7 @@ app.get('/lego/deleteset/:set_num', async (req, res) => {
     const theme = req.query.theme;
     try{ 
         await legoData.deleteSetByNum(req.params.set_num); 
-        res.redirect("/sets");
+        res.redirect("/lego/sets");
         }catch(err){ 
             res.status(500).render("500", {message: err}); 
         }

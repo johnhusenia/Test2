@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Add Set</title>
-    <link rel="stylesheet" href="/css/test2.css" />
-</head>
 <body>
     <%- include("partials/navbar", {page: '/addsets'}) %>
 
+    <br />
+    <br />
+    <br />
     <div class="container">
-        <h1>Add Set</h1>
-        <p>
-            This page will alter sets in the array.
-        </p>
+
+        <section >
+            <div class="container">
+                <h1>Add Set</h1>
+                
+            </div>
+        </section>
+
         <form method="post" action="/lego/addsets">
             <label for="set_num">Set Number:</label>
             <input type="number" id="set_num" name="set_num" class="input-field regular" required>
