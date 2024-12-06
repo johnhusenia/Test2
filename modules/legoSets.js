@@ -196,7 +196,7 @@ class LegoData{
         return new Promise((resolve, reject) => {
  
             this.Set.destroy({
-                where: { set_num: setNum }, // only remove user with id == 3
+                where: { set_num: setNum }, 
               }).then(() => {
                 resolve('Data deleted successfully');
                 console.log('successfully removed a set');
