@@ -63,7 +63,7 @@ class LegoData{
                 allowNull: true,
             },
         }, {
-            timestamps: false, // Disable createdAt and updatedAt
+            timestamps: false, 
         });
 
         this.Set.belongsTo(this.Theme, {foreignKey: 'theme_id'}); 
@@ -135,20 +135,26 @@ class LegoData{
             .then(sets => {
                 if (!theme) {
                     resolve(sets); 
-                }})
+                }
+            
+                })
 
                 this.Set.findAll({
-                    include: [this.Theme], // Include Theme data
+                    include: [this.Theme],
                     where: {
                         '$Theme.name$': {
-                            [Op.iLike]: `%${theme}%` // Case-insensitive match for Theme.name
+                            [Op.iLike]: `%${theme}%` 
                         }
                     }
                 })
                 .then(sets => {
                     if (sets.length > 0) {
                         resolve(sets); // Resolve with the matching sets
-                    } else {
+                    } 
+                    else if (!theme) {
+                        resolve(sets); 
+                    }
+                    else {
                         reject("Unable to find requested sets."); // Reject if no sets are found
                     }
                 })

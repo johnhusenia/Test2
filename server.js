@@ -1,12 +1,12 @@
 /********************************************************************************
-* WEB700 – Assignment 04
+* WEB700 – Assignment 06
 *
 * I declare that this assignment is my own work in accordance with Seneca's
 * Academic Integrity Policy:
 *
 * https://www.senecapolytechnic.ca/about/policies/academic-integrity-policy.html
 *
-* Name: John Clarence C. Husenia Student ID: 174280230 Date: November 15, 2024
+* Name: John Clarence C. Husenia Student ID: 174280230 Date: December 06, 2024
 *
 * Published URL: https://test2-lac-zeta.vercel.app/
 *
