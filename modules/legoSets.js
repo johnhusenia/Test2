@@ -128,39 +128,24 @@ class LegoData{
 
     getSetsByTheme(theme) {
         return new Promise((resolve, reject) => {
-
+            const whereCondition = theme 
+                ? { '$Theme.name$': { [Op.iLike]: `%${theme}%` } } 
+                : null;
+    
             this.Set.findAll({
-                include: [this.Theme] 
+                include: [this.Theme],
+                where: whereCondition,
             })
             .then(sets => {
-                if (!theme) {
-                    resolve(sets); 
+                if (sets.length > 0 || !theme) {
+                    resolve(sets);
+                } else {
+                    reject("Unable to find requested sets.");
                 }
-            
-                })
-
-                this.Set.findAll({
-                    include: [this.Theme],
-                    where: {
-                        '$Theme.name$': {
-                            [Op.iLike]: `%${theme}%` 
-                        }
-                    }
-                })
-                .then(sets => {
-                    if (sets.length > 0) {
-                        resolve(sets); // Resolve with the matching sets
-                    } 
-                    else if (!theme) {
-                        resolve(sets); 
-                    }
-                    else {
-                        reject("Unable to find requested sets."); // Reject if no sets are found
-                    }
-                })
-                .catch(error => {
-                    reject(`Error retrieving sets: ${error.message}`); // Reject on error
-                });
+            })
+            .catch(error => {
+                reject(`Error retrieving sets: ${error.message}`);
+            });
         });
     }
 
